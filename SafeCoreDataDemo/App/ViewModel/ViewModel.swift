@@ -31,7 +31,21 @@ class ViewModel: ObservableObject {
             .all(ascending: true)
             .reactive
             .observe(from: database)
-            .map { _ in }
+            .map { changeset in
+                // use chanset if neaded
+                if let delete = changeset.delete {
+                    print("Deletations: \(delete)")
+                }
+                if let update = changeset.update {
+                    print("Updation: \(update)")
+                }
+                if let insert = changeset.insert {
+                    print("Insertations: \(insert)")
+                }
+                if let move = changeset.move {
+                    print("Moves: \(move)")
+                }
+            }
             .flatMap { [unowned self] _ -> AnyPublisher<[Item], Error> in self.fetchItems }
             .eraseToAnyPublisher()
     }
